@@ -32,9 +32,10 @@ public class Server {
                 DataOutputStream out = new DataOutputStream(connectionSocket.getOutputStream());
 
                 melding = in.readLine();
+
                 System.out.println("Melding fra klient: " + melding);
 
-                out.writeBytes(nyMelding + "\n");
+//                out.writeBytes(nyMelding + "\n");
             } catch (Exception e) {
                 e.printStackTrace();
                 break;
