@@ -45,7 +45,7 @@ public class Server {
                             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z");
                             sdf.setTimeZone(TimeZone.getTimeZone("GMT+1"));
                             String formattedDate = sdf.format(date);
-                            historyMessage += formattedDate + " : " + r.getIp() + " : " + r.getAction() + " : " + r.getArgument() + "\n";
+                            historyMessage += formattedDate + " : " + r.getIp() + " : " + r.getAction() + " : " + r.getArgument() + "NEW_LINE";
                         }
                         out.writeBytes(historyMessage + "\n");
                     }
