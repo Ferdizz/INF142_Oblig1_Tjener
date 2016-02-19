@@ -12,8 +12,8 @@ import java.util.TimeZone;
 public class Server {
 
     public static void main(String[] args) {
-        ArrayList<Request> history = new ArrayList<>();
         int THE_HOLY_NUMBER = 9001;
+        ArrayList<Request> history = new ArrayList<>();
         String melding = "";
         ServerSocket serverSocket = null;
         try {
