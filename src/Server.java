@@ -30,24 +30,37 @@ public class Server {
                 DataOutputStream out = new DataOutputStream(connectionSocket.getOutputStream());
 
                 melding = in.readLine();
+
                 String ip = connectionSocket.getInetAddress().getHostName();
                 System.out.println("New request from " + ip + ": " + melding);
 
                 String[] words = melding.split(" ");
                 if (words.length == 1) {
-                    if (words[0].equals("GET")) {
-                        history.add(new Request(ip, "GET", "NULL"));
-                        out.writeBytes("NUMBER " + number + "\n");
-                    } else if (words[0].equals("HISTORY")) {
-                        String historyMessage = "";
-                        for (Request r : history) {
-                            Date date = new Date(r.getTime());
-                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z");
-                            sdf.setTimeZone(TimeZone.getTimeZone("GMT+1"));
-                            String formattedDate = sdf.format(date);
-                            historyMessage += formattedDate + " : " + r.getIp() + " : " + r.getAction() + " : " + r.getArgument() + "NEW_LINE";
-                        }
-                        out.writeBytes(historyMessage + "\n");
+                    switch (words[0]) {
+                        case "GET":
+                            history.add(new Request(ip, "GET", "NULL"));
+                            out.writeBytes("NUMBER " + number + "\n");
+                            break;
+                        case "HISTORY":
+                            history.add(new Request(ip, "HISTORY", "NULL"));
+                            String historyMessage = "";
+                            for (Request r : history) {
+                                historyMessage += formatDate(r.getTime()) + " : " + r.getIp() + " : " + r.getAction() + " : " + r.getArgument() + "NEW_LINE";
+                            }
+                            out.writeBytes(historyMessage + "\n");
+                            break;
+                        case "KILL":
+                            history.add(new Request(ip, "KILL", "NULL"));
+                            try {
+                                in.close();
+                                out.close();
+                                connectionSocket.close();
+                                serverSocket.close();
+                                return;
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            break;
                     }
                 } else if (words.length == 2) {
                     int newNumber = -1;
@@ -93,5 +106,12 @@ public class Server {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private static String formatDate(long time) {
+        Date date = new Date(time);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z");
+        sdf.setTimeZone(TimeZone.getTimeZone("GMT+1"));
+        return sdf.format(date);
     }
 }
