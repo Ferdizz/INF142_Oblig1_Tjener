@@ -13,7 +13,7 @@ public class Server {
 
     public static void main(String[] args) {
         ArrayList<Request> history = new ArrayList<>();
-        int number = 9001;
+        int THE_HOLY_NUMBER = 9001;
         String melding = "";
         ServerSocket serverSocket = null;
         try {
@@ -39,7 +39,7 @@ public class Server {
                     switch (words[0]) {
                         case "GET":
                             history.add(new Request(ip, "GET", "NULL"));
-                            out.writeBytes("NUMBER " + number + "\n");
+                            out.writeBytes("OK: The number is now: " + THE_HOLY_NUMBER + "\n");
                             break;
                         case "HISTORY":
                             history.add(new Request(ip, "HISTORY", "NULL"));
@@ -61,6 +61,9 @@ public class Server {
                                 e.printStackTrace();
                             }
                             break;
+                        default:
+                            out.writeBytes("ERROR: Request didn't succeed. Invalid argument.\n");
+                            break;
                     }
                 } else if (words.length == 2) {
                     int newNumber = -1;
@@ -73,7 +76,7 @@ public class Server {
                                 out.writeBytes("ERROR: Request didn't succeed. Invalid format.\n");
                             }
                             if (newNumber != -1) {
-                                number += newNumber;
+                                THE_HOLY_NUMBER += newNumber;
                                 history.add(new Request(ip, "ADD", "" + newNumber));
                                 out.writeBytes("OK\n");
                             }
@@ -86,7 +89,7 @@ public class Server {
                                 out.writeBytes("ERROR: Request didn't succeed. The number to add must be a number.\n");
                             }
                             if (newNumber != -1) {
-                                number -= newNumber;
+                                THE_HOLY_NUMBER -= newNumber;
                                 history.add(new Request(ip, "SUB", "" + newNumber));
                                 out.writeBytes("OK\n");
                             }
