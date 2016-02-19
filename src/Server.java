@@ -15,7 +15,6 @@ public class Server {
         ArrayList<Request> history = new ArrayList<>();
         int number = 9001;
         String melding = "";
-        String nyMelding = "Hei hei";
         ServerSocket serverSocket = null;
         try {
             serverSocket = new ServerSocket(7001);
@@ -33,12 +32,13 @@ public class Server {
                 melding = in.readLine();
                 String ip = connectionSocket.getInetAddress().getHostName();
                 System.out.println("New request from " + ip + ": " + melding);
+
                 String[] words = melding.split(" ");
-                if (words.length == 3) {
-                    if (words[2].equals("GET")) {
+                if (words.length == 1) {
+                    if (words[0].equals("GET")) {
                         history.add(new Request(ip, "GET", "NULL"));
                         out.writeBytes("NUMBER " + number + "\n");
-                    } else if (words[2].equals("HISTORY")) {
+                    } else if (words[0].equals("HISTORY")) {
                         String historyMessage = "";
                         for (Request r : history) {
                             Date date = new Date(r.getTime());
@@ -49,13 +49,13 @@ public class Server {
                         }
                         out.writeBytes(historyMessage + "\n");
                     }
-                } else if (words.length == 4) {
+                } else if (words.length == 2) {
                     int newNumber = -1;
-                    switch (words[2]) {
+                    switch (words[0]) {
                         case "ADD":
                             newNumber = -1;
                             try {
-                                newNumber = Integer.parseInt(words[3]);
+                                newNumber = Integer.parseInt(words[1]);
                             } catch (NumberFormatException e) {
                                 out.writeBytes("ERROR: Request didn't succeed. Invalid format.\n");
                             }
@@ -68,7 +68,7 @@ public class Server {
                         case "SUB":
                             newNumber = -1;
                             try {
-                                newNumber = Integer.parseInt(words[3]);
+                                newNumber = Integer.parseInt(words[1]);
                             } catch (NumberFormatException e) {
                                 out.writeBytes("ERROR: Request didn't succeed. The number to add must be a number.\n");
                             }
