@@ -11,6 +11,13 @@ public class Request {
         this.argument = argument;
     }
 
+    public Request(long time, String ip, String action, String argument) {
+        this.time = time;
+        this.ip = ip;
+        this.action = action;
+        this.argument = argument;
+    }
+
     public long getTime() {
         return time;
     }

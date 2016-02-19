@@ -22,6 +22,12 @@ public class Server {
             e.printStackTrace();
             System.exit(0);
         }
+        try {
+            history = FileManager.readInHistory();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         while (true) {
             System.out.println("Server is running...");
             try {
@@ -52,6 +58,7 @@ public class Server {
                         case "KILL":
                             history.add(new Request(ip, "KILL", "NULL"));
                             try {
+                                FileManager.saveHistory(history);
                                 in.close();
                                 out.close();
                                 connectionSocket.close();
