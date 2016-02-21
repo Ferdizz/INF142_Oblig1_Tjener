@@ -9,8 +9,21 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.TimeZone;
 
+/**
+ * Tjeneren T
+ * <p>
+ * Mottar og behandler følgende forespørsler:
+ * - GET : Returnerer verdien V.
+ * - ADD [number] : Legger til nummer til V.
+ * - SUB [number] : Trekker fra nummer fra V.
+ * - HISTORY : Returnerer historien over mottatte forespørsler.
+ * - KILL : Avslutter tjeneren T.
+ *
+ * @author Jarand Homleid Haugen og Ferdinand Forgaard
+ * @version 1.0
+ */
 public class T {
-    private static int THE_HOLY_NUMBER = 9001;
+    private static int THE_HOLY_NUMBER_V = 9001;
     private static ArrayList<Request> history = new ArrayList<>();
     private static String melding = "";
     private static ServerSocket serverSocket = null;
@@ -22,7 +35,7 @@ public class T {
         loadHistory();
 
         while (true) {
-            System.out.println("T is running...");
+            System.out.println("Server is running...");
             try {
                 Socket connectionSocket = waitAndPrepareConnection();
                 if(!(connectionSocket == null)) {
@@ -73,7 +86,7 @@ public class T {
     }
 
     /**
-     * Setter opp socketen til serveren
+     * Setter opp socketen til tjeneren.
      */
     private static void setupSocket(){
         try {
@@ -85,7 +98,7 @@ public class T {
     }
 
     /**
-     * Leser inn historien fra fil
+     * Leser inn historien fra fil.
      */
     private static void loadHistory(){
         try {
@@ -96,7 +109,9 @@ public class T {
     }
 
     /**
-     * Venter til en klient kobler seg til og setter deretter opp socket og ut-og inn strømmer
+     * Venter til en klient kobler seg til,
+     * setter deretter opp socket og input-/outputstream.
+     *
      * @return Socketen til klienten
      */
     private static Socket waitAndPrepareConnection(){
@@ -112,7 +127,8 @@ public class T {
     }
 
     /**
-     * Sender feilmelding til klienten om at forespørselsen ikke fulgte formatet til protokollen
+     * Sender feilmelding til klienten om at
+     * forespørselsen ikke fulgte formatet til protokollen.
      */
     private static void handleDefault(){
         try {
@@ -123,20 +139,22 @@ public class T {
     }
 
     /**
-     * Returner V
+     * Sender verdien til V.
+     *
      * @param ip IP-en til klienten
      */
     private static void handleGetRequest(String ip){
         try {
             history.add(new Request(ip, "GET", "NULL"));
-            out.writeBytes("OK: The number is now: " + THE_HOLY_NUMBER + "\n");
+            out.writeBytes("OK: The number is now: " + THE_HOLY_NUMBER_V + "\n");
         } catch (IOException e){
             e.printStackTrace();
         }
     }
 
     /**
-     * Sender historien over forespørsler som er gjort til serveren
+     * Sender historien over mottatte forespørsler.
+     *
      * @param ip IP-en til klienten
      */
     private static void handleHistoryRequest(String ip){
@@ -153,7 +171,8 @@ public class T {
     }
 
     /**
-     * Stenger strømmer og tilkobling til klienten før server-socketen stenges
+     * Stenger strømmer og tilkobling til klienten før serverSocket stenges.
+     *
      * @param connectionSocket Socketen til klienten
      * @param ip IP-en til klienten
      */
@@ -171,7 +190,9 @@ public class T {
     }
 
     /**
-     * Legger nummeret som spesifiseres til V dersom nummeret er et tall og sender respons tilbake til klienten
+     * Legger til nummeret som spesifiseres til V dersom nummeret
+     * er et tall, og responderer tilbake til klienten.
+     *
      * @param ip IP-en til klienten
      * @param words Ordene som ble sendt i forespørselen
      */
@@ -184,7 +205,7 @@ public class T {
                 out.writeBytes("ERROR: Request didn't succeed. Invalid format.\n");
             }
             if (newNumber != -1) {
-                THE_HOLY_NUMBER += newNumber;
+                THE_HOLY_NUMBER_V += newNumber;
                 history.add(new Request(ip, "ADD", "" + newNumber));
                 out.writeBytes("OK\n");
             }
@@ -194,7 +215,9 @@ public class T {
     }
 
     /**
-     * Trekker nummeret som spesifiseres fra V dersom nummeret er et tall og sender respons tilbake til klienten
+     * Trekker fra nummeret som spesifiseres fra V dersom nummeret
+     * er et tall, og responderer tilbake til klienten.
+     *
      * @param ip IP-en til klienten
      * @param words Ordene som ble sendt i forespørselsen
      */
@@ -207,7 +230,7 @@ public class T {
                 out.writeBytes("ERROR: Request didn't succeed. The number to add must be a number.\n");
             }
             if (newNumber != -1) {
-                THE_HOLY_NUMBER -= newNumber;
+                THE_HOLY_NUMBER_V -= newNumber;
                 history.add(new Request(ip, "SUB", "" + newNumber));
                 out.writeBytes("OK\n");
             }
@@ -217,7 +240,8 @@ public class T {
     }
 
     /**
-     * Denne metoden konverterer et Unix tidsstempel til lesbar dato og klokkeslett
+     * Konverterer et Unix tidsstempel til lesbar dato og klokkeslett.
+     *
      * @param time Tiden som skal konverteres
      * @return Streng med data og klokkeslett
      */
