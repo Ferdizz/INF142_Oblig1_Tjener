@@ -23,6 +23,7 @@ import java.util.TimeZone;
  * @version 1.0
  */
 public class T {
+    private static boolean run = true;
     private static int THE_HOLY_NUMBER_V = 9001;
     private static ArrayList<Request> history = new ArrayList<>();
     private static String melding = "";
@@ -34,7 +35,7 @@ public class T {
         setupSocket();
         loadHistory();
 
-        while (true) {
+        while (run) {
             System.out.println("Server is running...");
             try {
                 Socket connectionSocket = waitAndPrepareConnection();
@@ -184,6 +185,7 @@ public class T {
             out.close();
             connectionSocket.close();
             serverSocket.close();
+            run = false;
         } catch (IOException e) {
             e.printStackTrace();
         }
