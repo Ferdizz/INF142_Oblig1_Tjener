@@ -11,7 +11,7 @@ import java.util.TimeZone;
 
 /**
  * Tjeneren T
- * <p>
+ *
  * Mottar og behandler følgende forespørsler:
  * - GET : Returnerer verdien V.
  * - ADD [number] : Legger til nummer til V.
